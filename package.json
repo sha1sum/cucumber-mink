@@ -40,7 +40,7 @@
     "coverage:upload": "cat ./coverage/lcov.info | coveralls",
     "prepublish": "npm run compile",
     "precompile": "rm -rf dist/",
-    "preinstall": "cd node_modules/cucumber-mink && npm run compile",
+    "preinstall": "npm run compile",
     "compile": "babel src/ -d dist/",
     "pretest": "eslint src/ test/",
     "test": "mocha --compilers js:babel-register test/mocha/",
