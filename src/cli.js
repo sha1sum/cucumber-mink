@@ -24,6 +24,7 @@ const cli = meow(`
     --inject            Mink auto-inject in context                     [Boolean] [default: true]
     --browser           Desired browser name                        [String] [default: "firefox"]
     --port              Selenium server port                                      [default: 4444]
+    --log-level         The log level to pass to the driver          [String] [default: "silent"]
     --timeout           Cucumber function timeout in ms                           [default: 5000]
     --screenshot-path   Path to which to save screenshots on failure    [String] [default: empty]
     --wdio-screenshot   Use wdio-screenshot if defined. One of:         [String] [default: empty]
@@ -36,6 +37,7 @@ const cli = meow(`
     inject: true,
     browser: 'chrome',
     port: 4444,
+    'log-level': 'silent',
     timeout: 5000,
     'screenshot-path': undefined, // showing default for clarity
     'wdio-screenshot': undefined, // showing default for clarity
@@ -71,6 +73,7 @@ const injectArgs = (flags) => {
   let params = Mink.DEFAULT_PARAMS;
   params.driver.desiredCapabilities.browserName = flags.browser;
   params.driver.port = flags.port;
+  params.driver.logLevel = flags['log-level'];
   params.timeout = flags.timeout;
   params.driver.screenshotPath = flags['screenshot-path'];
   params = configureWDIOScreenshot(params, flags['wdio-screenshot']);
