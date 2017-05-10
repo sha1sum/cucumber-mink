@@ -42,6 +42,8 @@ const DEFAULT_PARAMS = {
     logLevel: 'silent',
     port: 4444,
   },
+  timeout: 5000,
+  screenshotMethod: 'saveScreenshot',
 };
 
 function noop() {
@@ -177,13 +179,15 @@ class Mink {
       driver.end(),
     );
 
+    cucumber.setDefaultTimeout(this.parameters.timeout);
+
     if (driver.parameters.screenshotPath) {
       cucumber.After((event) => {
         if (!event.isFailed()) return null;
 
         const fileName = [event.getName() || 'Error', ':', event.getLine(), '.png'].join('');
         const filePath = path.join(driver.parameters.screenshotPath, fileName);
-        return driver.saveScreenshot(filePath);
+        return driver[this.parameters.screenshotMethod](filePath);
       });
     }
   }
