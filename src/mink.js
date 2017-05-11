@@ -89,7 +89,8 @@ class Mink {
       this.defineStep(pattern, fn);
     });
 
-    parameters.onInit.forEach(fn => fn(this));
+    this.parameters.onInit.forEach(fn => fn(this));
+    debug('onInit', this.parameters);
   }
 
   /**
@@ -185,7 +186,7 @@ class Mink {
    * @returns {void}
    */
   registerHooks(cucumber, driver) {
-    const parameters = this.parameters;
+    const me = this;
     cucumber.registerHandler('BeforeFeatures', (/* event */) =>
       driver.init().then(() => (
         driver.setViewportSize(driver.parameters.viewportSize)
@@ -196,7 +197,7 @@ class Mink {
       driver.end(),
     );
 
-    cucumber.setDefaultTimeout(parameters.timeout);
+    cucumber.setDefaultTimeout(me.parameters.timeout);
 
     if (driver.parameters.screenshotPath) {
       cucumber.After((event) => {
@@ -204,8 +205,8 @@ class Mink {
 
         const fileName = [event.getName() || 'Error', ':', event.getLine(), '.png'].join('');
         const filePath = path.join(driver.parameters.screenshotPath, fileName);
-        debug('screenshot', filePath, parameters.screenshotFn);
-        return parameters.screenshotFn(filePath);
+        debug('screenshot', filePath, me.parameters.screenshotFn);
+        return me.parameters.screenshotFn(filePath);
       });
     }
   }

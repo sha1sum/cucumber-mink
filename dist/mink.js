@@ -146,9 +146,10 @@ var Mink = function () {
         _this.defineStep(pattern, fn);
       });
 
-      parameters.onInit.forEach(function (fn) {
+      this.parameters.onInit.forEach(function (fn) {
         return fn(_this);
       });
+      debug('onInit', this.parameters);
     }
 
     /**
@@ -285,7 +286,7 @@ var Mink = function () {
   }, {
     key: 'registerHooks',
     value: function registerHooks(cucumber, driver) {
-      var parameters = this.parameters;
+      var me = this;
       cucumber.registerHandler('BeforeFeatures', function () {
         return (/* event */driver.init().then(function () {
             return driver.setViewportSize(driver.parameters.viewportSize);
@@ -298,7 +299,7 @@ var Mink = function () {
         );
       });
 
-      cucumber.setDefaultTimeout(parameters.timeout);
+      cucumber.setDefaultTimeout(me.parameters.timeout);
 
       if (driver.parameters.screenshotPath) {
         cucumber.After(function (event) {
@@ -306,8 +307,8 @@ var Mink = function () {
 
           var fileName = [event.getName() || 'Error', ':', event.getLine(), '.png'].join('');
           var filePath = _path2.default.join(driver.parameters.screenshotPath, fileName);
-          debug('screenshot', filePath, parameters.screenshotFn);
-          return parameters.screenshotFn(filePath);
+          debug('screenshot', filePath, me.parameters.screenshotFn);
+          return me.parameters.screenshotFn(filePath);
         });
       }
     }
