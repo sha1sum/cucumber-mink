@@ -44,10 +44,10 @@ var cli = (0, _meow2.default)('\n  Usage: cucumber-mink [options] -- [CUCUMBER A
     inject: true,
     browser: 'chrome',
     port: 4444,
-    'log-level': 'silent',
+    logLevel: 'silent',
     timeout: 5000,
-    'screenshot-path': undefined, // showing default for clarity
-    'wdio-screenshot': undefined },
+    screenshotPath: undefined, // showing default for clarity
+    wdioScreenshot: undefined },
   boolean: ['inject'],
   alias: {
     v: 'version',
@@ -82,10 +82,10 @@ var injectArgs = function injectArgs(flags) {
   var params = _mink2.default.DEFAULT_PARAMS;
   params.driver.desiredCapabilities.browserName = flags.browser;
   params.driver.port = flags.port;
-  params.driver.logLevel = flags['log-level'];
+  params.driver.logLevel = flags.logLevel;
   params.timeout = flags.timeout;
-  params.driver.screenshotPath = flags['screenshot-path'];
-  params = configureWDIOScreenshot(params, flags['wdio-screenshot']);
+  params.driver.screenshotPath = flags.screenshotPath;
+  params = configureWDIOScreenshot(params, flags.wdioScreenshot);
 
   var inject = require('./cli/support/mink_inject.js');
 

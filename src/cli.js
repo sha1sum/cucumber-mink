@@ -37,10 +37,10 @@ const cli = meow(`
     inject: true,
     browser: 'chrome',
     port: 4444,
-    'log-level': 'silent',
+    logLevel: 'silent',
     timeout: 5000,
-    'screenshot-path': undefined, // showing default for clarity
-    'wdio-screenshot': undefined, // showing default for clarity
+    screenshotPath: undefined, // showing default for clarity
+    wdioScreenshot: undefined, // showing default for clarity
   },
   boolean: ['inject'],
   alias: {
@@ -73,10 +73,10 @@ const injectArgs = (flags) => {
   let params = Mink.DEFAULT_PARAMS;
   params.driver.desiredCapabilities.browserName = flags.browser;
   params.driver.port = flags.port;
-  params.driver.logLevel = flags['log-level'];
+  params.driver.logLevel = flags.logLevel;
   params.timeout = flags.timeout;
-  params.driver.screenshotPath = flags['screenshot-path'];
-  params = configureWDIOScreenshot(params, flags['wdio-screenshot']);
+  params.driver.screenshotPath = flags.screenshotPath;
+  params = configureWDIOScreenshot(params, flags.wdioScreenshot);
 
   const inject = require('./cli/support/mink_inject.js');
 
