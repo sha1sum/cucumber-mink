@@ -68,7 +68,7 @@ var configureWDIOScreenshot = function configureWDIOScreenshot(params, method) {
     case 'document':
       {
         newParams.onInit.push(function (mink) {
-          (0, _wdioScreenshot.initWDIOScreenshot)(mink.driver.client);
+          (0, _wdioScreenshot.init)(mink.driver.client);
         });
         newParams.screenshotMethod = 'save' + method.charAt(0).toUpperCase() + method.slice(1) + 'Screenshot';
         break;
