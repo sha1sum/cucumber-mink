@@ -283,6 +283,7 @@ var Mink = function () {
 
           var fileName = [event.getName() || 'Error', ':', event.getLine(), '.png'].join('');
           var filePath = _path2.default.join(driver.parameters.screenshotPath, fileName);
+          debug('driver.' + _this5.parameters.screenshotMethod + '()', filePath);
           return driver[_this5.parameters.screenshotMethod](filePath);
         });
       }
