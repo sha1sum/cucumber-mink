@@ -39,7 +39,7 @@ describe('Mink API', () => {
     it('init default params', () => {
       const cucumber = mockCucumber();
       Mink.init(cucumber);
-      expect(Mink.parameters).to.deep.equal(Mink.DEFAULT_PARAMS);
+      expect(Mink.parameters).to.deep.equal(Object.assign(Mink.DEFAULT_PARAMS, { screenshotFn: Mink.parameters.screenshotFn }));
       expect(Mink.cucumber).to.equal(cucumber);
 
       expect(cucumber.registerHandler.mock.calls.length).to.equal(2);
@@ -48,16 +48,19 @@ describe('Mink API', () => {
       expect(cucumber.setDefaultTimeout.mock.calls[0][0]).to.equal(5000);
     });
 
-    it('init with driver.screenshotPath and screenshotMethod', () => {
+    it('onInit with driver.screenshotPath and setting screenshotFn', () => {
       const params = {
         driver: {
           screenshotPath: '/foo/bar',
         },
-        screenshotMethod: 'saveDocumentScreenshot',
+        onInit: [
+          (mink) => {
+            mink.setParameter('screenshotFn', jest.fn());
+          },
+        ],
       };
       const cucumber = mockCucumber();
       Mink.init(cucumber, params);
-      Mink.driver.saveDocumentScreenshot = jest.fn();
       const mockEvent = {
         isFailed: () => true,
         getName: () => 'mock-test',
@@ -65,8 +68,8 @@ describe('Mink API', () => {
       };
       expect(cucumber.After.mock.calls).to.have.lengthOf(1);
       cucumber.After.mock.calls[0][0](mockEvent);
-      expect(Mink.driver.saveDocumentScreenshot.mock.calls).have.lengthOf(1);
-      expect(Mink.driver.saveDocumentScreenshot.mock.calls[0][0]).to.equal('/foo/bar/mock-test:69.png');
+      expect(Mink.parameters.screenshotFn.mock.calls).to.have.lengthOf(1);
+      expect(Mink.parameters.screenshotFn.mock.calls[0][0]).to.equal('/foo/bar/mock-test:69.png');
     });
   });
 

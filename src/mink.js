@@ -17,6 +17,7 @@ import arity from 'util-arity';
 import Promise from 'bluebird';
 import Immutable from 'immutable';
 import defaultsDeep from 'lodash.defaultsdeep';
+import set from 'lodash.set';
 import pkg from '../package.json';
 
 import Step from './step.js';
@@ -43,7 +44,7 @@ const DEFAULT_PARAMS = {
     port: 4444,
   },
   timeout: 5000,
-  screenshotMethod: 'saveScreenshot',
+  screenshotFn: () => {},
   onInit: [],
 };
 
@@ -68,7 +69,7 @@ class Mink {
    * Mink initialization method and entry point
    *
    * @param {Object}  cucumber    cucumber-js context
-   * @param {Object}  parameters
+   * @param {Object}  params
    * @returns {void}
    */
   init(cucumber, params = {}) {
@@ -77,6 +78,7 @@ class Mink {
     const parameters = defaultsDeep(params, DEFAULT_PARAMS);
     const driver = configureDriver(parameters.driver);
 
+    parameters.screenshotFn = driver.client.saveScreenshot;
     this.parameters = parameters;
     this.cucumber = cucumber;
     this.driver = driver;
@@ -165,6 +167,17 @@ class Mink {
   }
 
   /**
+   * Set the value of a parameter (convenience function)
+   *
+   * @param {String} paramPath   the keys under which the value should be stored in dot notation
+   * @param value
+   * @returns {void}
+   */
+  setParameter(paramPath, value) {
+    set(this.parameters, paramPath, value);
+  }
+
+  /**
    * Register mink driver hooks on cucumber context
    *
    * @param {Object} Cucumber         cucumber-js context
@@ -172,6 +185,7 @@ class Mink {
    * @returns {void}
    */
   registerHooks(cucumber, driver) {
+    const parameters = this.parameters;
     cucumber.registerHandler('BeforeFeatures', (/* event */) =>
       driver.init().then(() => (
         driver.setViewportSize(driver.parameters.viewportSize)
@@ -182,7 +196,7 @@ class Mink {
       driver.end(),
     );
 
-    cucumber.setDefaultTimeout(this.parameters.timeout);
+    cucumber.setDefaultTimeout(parameters.timeout);
 
     if (driver.parameters.screenshotPath) {
       cucumber.After((event) => {
@@ -190,8 +204,8 @@ class Mink {
 
         const fileName = [event.getName() || 'Error', ':', event.getLine(), '.png'].join('');
         const filePath = path.join(driver.parameters.screenshotPath, fileName);
-        debug(`driver.${this.parameters.screenshotMethod}()`, filePath);
-        return driver[this.parameters.screenshotMethod](filePath);
+        debug('screenshot', filePath);
+        return parameters.screenshotFn(filePath);
       });
     }
   }
