@@ -44,6 +44,7 @@ const DEFAULT_PARAMS = {
   },
   timeout: 5000,
   screenshotMethod: 'saveScreenshot',
+  onInit: [],
 };
 
 function noop() {
@@ -85,6 +86,8 @@ class Mink {
     definitions.forEach(([pattern, fn]) => {
       this.defineStep(pattern, fn);
     });
+
+    parameters.onInit.forEach(fn => fn(this));
   }
 
   /**

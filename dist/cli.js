@@ -17,6 +17,8 @@ var _cucumber = require('cucumber');
 
 var _cucumber2 = _interopRequireDefault(_cucumber);
 
+var _wdioScreenshot = require('wdio-screenshot');
+
 var _rewire = require('./cli/rewire.js');
 
 var _rewire2 = _interopRequireDefault(_rewire);
@@ -65,7 +67,9 @@ var configureWDIOScreenshot = function configureWDIOScreenshot(params, method) {
     case 'viewport':
     case 'document':
       {
-        newParams.driver.plugins = { 'wdio-screenshot': {} };
+        newParams.onInit.push(function (mink) {
+          (0, _wdioScreenshot.initWDIOScreenshot)(mink.driver.client);
+        });
         newParams.screenshotMethod = 'save' + method.charAt(0).toUpperCase() + method.slice(1) + 'Screenshot';
         break;
       }

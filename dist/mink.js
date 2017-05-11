@@ -83,7 +83,8 @@ var DEFAULT_PARAMS = {
     port: 4444
   },
   timeout: 5000,
-  screenshotMethod: 'saveScreenshot'
+  screenshotMethod: 'saveScreenshot',
+  onInit: []
 };
 
 function noop() {}
@@ -138,6 +139,10 @@ var Mink = function () {
             fn = _ref2[1];
 
         _this.defineStep(pattern, fn);
+      });
+
+      parameters.onInit.forEach(function (fn) {
+        return fn(_this);
       });
     }
 

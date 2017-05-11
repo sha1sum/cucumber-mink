@@ -8,6 +8,7 @@ import path from 'path';
 import meow from 'meow';
 import dbg from 'debug';
 import cucumber from 'cucumber';
+import { initWDIOScreenshot } from 'wdio-screenshot';
 import startMocking from './cli/rewire.js';
 import Mink from './mink.js';
 
@@ -57,7 +58,9 @@ const configureWDIOScreenshot = (params, method) => {
     }
     case 'viewport':
     case 'document': {
-      newParams.driver.plugins = { 'wdio-screenshot': {} };
+      newParams.onInit.push((mink) => {
+        initWDIOScreenshot(mink.driver.client);
+      });
       newParams.screenshotMethod = `save${method.charAt(0).toUpperCase()}${method.slice(1)}Screenshot`;
       break;
     }
