@@ -55,7 +55,8 @@ const configureWDIOScreenshot = (params, method) => {
     case undefined: {
       break;
     }
-    case 'viewport' || 'document': {
+    case 'viewport':
+    case 'document': {
       newParams.driver.plugins = { 'wdio-screenshot': {} };
       newParams.screenshotMethod = `save${method.charAt(0).toUpperCase()}${method.slice(1)}Screenshot`;
       break;
