@@ -8,7 +8,7 @@ import path from 'path';
 import meow from 'meow';
 import dbg from 'debug';
 import cucumber from 'cucumber';
-import { initWDIOScreenshot } from 'wdio-screenshot';
+import { init as initWDIOScreenshot } from 'wdio-screenshot';
 import startMocking from './cli/rewire.js';
 import Mink from './mink.js';
 
