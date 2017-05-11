@@ -69,7 +69,7 @@ var configureWDIOScreenshot = function configureWDIOScreenshot(params, method) {
       {
         newParams.onInit.push(function (mink) {
           (0, _wdioScreenshot.init)(mink.driver.client);
-          mink.setParameter('screenshotFn', method === 'document' ? _wdioScreenshot.saveDocumentScreenshot : _wdioScreenshot.saveViewportScreenshot);
+          mink.setParameter('screenshotFn', method === 'document' ? mink.driver.client.saveDocumentScreenshot : mink.driver.client.saveViewportScreenshot);
         });
         break;
       }

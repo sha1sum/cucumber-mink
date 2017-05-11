@@ -8,7 +8,7 @@ import path from 'path';
 import meow from 'meow';
 import dbg from 'debug';
 import cucumber from 'cucumber';
-import { init as initWDIOScreenshot, saveDocumentScreenshot, saveViewportScreenshot } from 'wdio-screenshot';
+import { init as initWDIOScreenshot } from 'wdio-screenshot';
 import startMocking from './cli/rewire.js';
 import Mink from './mink.js';
 
@@ -60,7 +60,7 @@ const configureWDIOScreenshot = (params, method) => {
     case 'document': {
       newParams.onInit.push((mink) => {
         initWDIOScreenshot(mink.driver.client);
-        mink.setParameter('screenshotFn', (method === 'document') ? saveDocumentScreenshot : saveViewportScreenshot);
+        mink.setParameter('screenshotFn', (method === 'document') ? mink.driver.client.saveDocumentScreenshot : mink.driver.client.saveViewportScreenshot);
       });
       break;
     }
