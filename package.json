@@ -40,7 +40,6 @@
     "coverage:upload": "cat ./coverage/lcov.info | coveralls",
     "prepublish": "npm run compile",
     "precompile": "rm -rf dist/",
-    "preinstall": "npm run prepublish",
     "compile": "babel src/ -d dist/",
     "pretest": "eslint src/ test/",
     "test": "mocha --compilers js:babel-register test/mocha/",
