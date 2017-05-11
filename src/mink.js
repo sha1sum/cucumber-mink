@@ -187,6 +187,7 @@ class Mink {
 
         const fileName = [event.getName() || 'Error', ':', event.getLine(), '.png'].join('');
         const filePath = path.join(driver.parameters.screenshotPath, fileName);
+        debug(`driver.${this.parameters.screenshotMethod}()`, filePath);
         return driver[this.parameters.screenshotMethod](filePath);
       });
     }
