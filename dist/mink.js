@@ -82,7 +82,8 @@ var DEFAULT_PARAMS = {
     logLevel: 'silent',
     port: 4444
   },
-  timeout: 5000
+  timeout: 5000,
+  screenshotMethod: 'saveScreenshot'
 };
 
 function noop() {}
@@ -260,6 +261,8 @@ var Mink = function () {
   }, {
     key: 'registerHooks',
     value: function registerHooks(cucumber, driver) {
+      var _this5 = this;
+
       cucumber.registerHandler('BeforeFeatures', function () {
         return (/* event */driver.init().then(function () {
             return driver.setViewportSize(driver.parameters.viewportSize);
@@ -280,7 +283,7 @@ var Mink = function () {
 
           var fileName = [event.getName() || 'Error', ':', event.getLine(), '.png'].join('');
           var filePath = _path2.default.join(driver.parameters.screenshotPath, fileName);
-          return driver.saveScreenshot(filePath);
+          return driver[_this5.parameters.screenshotMethod](filePath);
         });
       }
     }
