@@ -53,6 +53,7 @@
     "debug": "2.6.3",
     "immutable": "3.8.1",
     "lodash.defaultsdeep": "4.6.0",
+    "lodash.set": "4.3.2",
     "meow": "3.7.0",
     "util-arity": "1.1.0",
     "wdio-screenshot": "^0.5.2",
