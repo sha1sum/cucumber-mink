@@ -306,7 +306,7 @@ var Mink = function () {
 
           var fileName = [event.getName() || 'Error', ':', event.getLine(), '.png'].join('');
           var filePath = _path2.default.join(driver.parameters.screenshotPath, fileName);
-          debug('screenshot', filePath);
+          debug('screenshot', filePath, parameters.screenshotFn);
           return parameters.screenshotFn(filePath);
         });
       }
