@@ -43,6 +43,10 @@ var _lodash = require('lodash.defaultsdeep');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _lodash3 = require('lodash.set');
+
+var _lodash4 = _interopRequireDefault(_lodash3);
+
 var _package = require('../package.json');
 
 var _package2 = _interopRequireDefault(_package);
@@ -83,7 +87,7 @@ var DEFAULT_PARAMS = {
     port: 4444
   },
   timeout: 5000,
-  screenshotMethod: 'saveScreenshot',
+  screenshotFn: function screenshotFn() {},
   onInit: []
 };
 
@@ -110,7 +114,7 @@ var Mink = function () {
    * Mink initialization method and entry point
    *
    * @param {Object}  cucumber    cucumber-js context
-   * @param {Object}  parameters
+   * @param {Object}  params
    * @returns {void}
    */
 
@@ -127,6 +131,7 @@ var Mink = function () {
       var parameters = (0, _lodash2.default)(params, DEFAULT_PARAMS);
       var driver = (0, _driver2.default)(parameters.driver);
 
+      parameters.screenshotFn = driver.client.saveScreenshot;
       this.parameters = parameters;
       this.cucumber = cucumber;
       this.driver = driver;
@@ -256,6 +261,20 @@ var Mink = function () {
     }
 
     /**
+     * Set the value of a parameter (convenience function)
+     *
+     * @param {String} paramPath   the keys under which the value should be stored in dot notation
+     * @param value
+     * @returns {void}
+     */
+
+  }, {
+    key: 'setParameter',
+    value: function setParameter(paramPath, value) {
+      (0, _lodash4.default)(this.parameters, paramPath, value);
+    }
+
+    /**
      * Register mink driver hooks on cucumber context
      *
      * @param {Object} Cucumber         cucumber-js context
@@ -266,8 +285,7 @@ var Mink = function () {
   }, {
     key: 'registerHooks',
     value: function registerHooks(cucumber, driver) {
-      var _this5 = this;
-
+      var parameters = this.parameters;
       cucumber.registerHandler('BeforeFeatures', function () {
         return (/* event */driver.init().then(function () {
             return driver.setViewportSize(driver.parameters.viewportSize);
@@ -280,7 +298,7 @@ var Mink = function () {
         );
       });
 
-      cucumber.setDefaultTimeout(this.parameters.timeout);
+      cucumber.setDefaultTimeout(parameters.timeout);
 
       if (driver.parameters.screenshotPath) {
         cucumber.After(function (event) {
@@ -288,8 +306,8 @@ var Mink = function () {
 
           var fileName = [event.getName() || 'Error', ':', event.getLine(), '.png'].join('');
           var filePath = _path2.default.join(driver.parameters.screenshotPath, fileName);
-          debug('driver.' + _this5.parameters.screenshotMethod + '()', filePath);
-          return driver[_this5.parameters.screenshotMethod](filePath);
+          debug('screenshot', filePath);
+          return parameters.screenshotFn(filePath);
         });
       }
     }
